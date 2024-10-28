@@ -1,0 +1,153 @@
+{
+  "name": "unplugin-data",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@9.12.3",
+  "description": "A versatile plugin for compiling and transforming custom-configurable data files (e.g., *.data.js/ts/mjs/mts) into JavaScript object strings.",
+  "license": "MIT",
+  "homepage": "https://github.com/lisonge/unplugin-data#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lisonge/unplugin-data.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lisonge/unplugin-data/issues"
+  },
+  "keywords": [
+    "unplugin",
+    "vite",
+    "webpack",
+    "rollup",
+    "transform"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./astro": {
+      "import": "./dist/astro.js",
+      "require": "./dist/astro.cjs"
+    },
+    "./rspack": {
+      "import": "./dist/rspack.js",
+      "require": "./dist/rspack.cjs"
+    },
+    "./vite": {
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
+    },
+    "./webpack": {
+      "import": "./dist/webpack.js",
+      "require": "./dist/webpack.cjs"
+    },
+    "./rollup": {
+      "import": "./dist/rollup.js",
+      "require": "./dist/rollup.cjs"
+    },
+    "./esbuild": {
+      "import": "./dist/esbuild.js",
+      "require": "./dist/esbuild.cjs"
+    },
+    "./nuxt": {
+      "import": "./dist/nuxt.js",
+      "require": "./dist/nuxt.cjs"
+    },
+    "./farm": {
+      "import": "./dist/farm.js",
+      "require": "./dist/farm.cjs"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "require": "./dist/types.cjs"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./*"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch src",
+    "build:fix": "esno scripts/postbuild.ts",
+    "lint": "eslint . --fix",
+    "play": "pnpm -C playground run dev",
+    "prepublishOnly": "pnpm run build",
+    "release": "bumpp && pnpm publish",
+    "start": "esno src/index.ts",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "@farmfe/core": ">=1",
+    "@nuxt/kit": "^3",
+    "@nuxt/schema": "^3",
+    "esbuild": "*",
+    "rollup": "^3",
+    "vite": ">=3",
+    "webpack": "^4 || ^5"
+  },
+  "peerDependenciesMeta": {
+    "@farmfe/core": {
+      "optional": true
+    },
+    "@nuxt/kit": {
+      "optional": true
+    },
+    "@nuxt/schema": {
+      "optional": true
+    },
+    "esbuild": {
+      "optional": true
+    },
+    "rollup": {
+      "optional": true
+    },
+    "vite": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "jiti": "^2.3.3",
+    "unplugin": "^1.12.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^3.0.0",
+    "@nuxt/kit": "^3.13.0",
+    "@nuxt/schema": "^3.13.0",
+    "@types/node": "^22.5.1",
+    "bumpp": "^9.5.2",
+    "chalk": "^5.3.0",
+    "eslint": "^9.9.1",
+    "esno": "^4.7.0",
+    "fast-glob": "^3.3.2",
+    "nodemon": "^3.1.4",
+    "rollup": "^4.21.2",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2",
+    "vitest": "^2.0.5",
+    "webpack": "^5.94.0"
+  },
+  "volta": {
+    "node": "20.18.0",
+    "pnpm": "9.12.3"
+  }
+}
