@@ -46,6 +46,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
+      - uses: pnpm/action-setup@v4
+      
       - name: Setup
         run: pnpm i -g @antfu/ni
 
