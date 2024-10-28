@@ -19,8 +19,10 @@ jobs:
         with:
           node-version: lts/*
 
+      - uses: pnpm/action-setup@v4
+
       - name: Setup
-        run: npm i -g @antfu/ni
+        run: pnpm add -g @antfu/ni
 
       - name: Install
         run: nci
@@ -45,7 +47,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Setup
-        run: npm i -g @antfu/ni
+        run: pnpm i -g @antfu/ni
 
       - name: Install
         run: nci
