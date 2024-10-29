@@ -165,3 +165,26 @@ export default ts0
 export const ts1 = /* @__PURE__ */ new Date(1730102201114)
 export const ts2 = '5.6.3'
 ```
+
+## 示例2
+
+浏览器控制台输出当前 git 仓库的最新提交信息. [commit.data.ts](https://github.com/gkd-kit/inspect/blob/ce5c9871aa2a847780a13181d776f248ae4cf6e2/src/utils/commit.data.ts#L1)
+
+```ts
+// commit.data.ts
+import { simpleGit } from 'simple-git';
+const latestLog = (await simpleGit().log({ maxCount: 1 })).latest!;
+const commitLog =
+  `GIT commit\n` +
+  Object.entries(latestLog)
+    .filter(([_, value]: [string, string]) => String(value || ``).trim())
+    .map(([key, value]) => {
+      return key + ': ' + value;
+    })
+    .join('\n');
+export default commitLog;
+
+// main.ts
+import commitLog from './utils/commit.data';
+console.log(commitLog);
+```
