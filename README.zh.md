@@ -1,8 +1,8 @@
 # unplugin-data
 
-A universal plugin that performs data file loading (e.g., *.data.js/ts/mjs/mts) and transforms it into a JavaScript object string module at compile time.
+一个在编译期执行数据加载文件(如\*.data.js/ts/mjs/mts)并转换为 JavaScript 对象字符串模块的通用插件
 
-## Install
+## 安装
 
 ```sh
 pnpm add unplugin-data
@@ -140,7 +140,7 @@ export interface Options {
 }
 ```
 
-## Example
+## 示例
 
 [ts.data.ts](./playground/src/data/ts.data.ts)
 
@@ -155,7 +155,7 @@ export const ts2 = await fetch(
   .then(r => r.version)
 ```
 
-plugin will run it in current nodejs runtims and transform result to the following code
+插件将在当前 nodejs 运行时执行它并将结果转换为以下代码
 
 ```js
 const ts0 = /* @__PURE__ */ new Set([1, 2, 3, void 0])

@@ -18,7 +18,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      
+
       - uses: pnpm/action-setup@v4
 
       - run: pnpm exec changelogithub
