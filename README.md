@@ -1,5 +1,7 @@
 # unplugin-data
 
+[README.md](./README.md) | [中文文档](./README.zh.md)
+
 A universal plugin that performs data file loading (e.g., *.data.js/ts/mjs/mts) and transforms it into a JavaScript object string module at compile time.
 
 ## Install
