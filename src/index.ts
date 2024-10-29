@@ -10,10 +10,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
   options,
 ) => {
   const resolvedOptions = getResolvedOptions(options)
-  const cwdJiti = createJiti(
-    `${process.cwd()}/any.js`,
-    { moduleCache: false },
-  )
+  const cwdJiti = createJiti(`${process.cwd()}/any.js`, { moduleCache: false })
   return {
     name: 'unplugin-data',
     enforce: 'pre',
@@ -22,7 +19,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (
     },
     async transform(_, id) {
       const mod = await cwdJiti.import(id)
-      return stringifyModule(mod, resolvedOptions)
+      return { code: stringifyModule(mod, resolvedOptions), map: null }
     },
   }
 }
