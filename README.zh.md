@@ -1,5 +1,7 @@
 # unplugin-data
 
+[README.md](./README.md) | [中文文档](./README.zh.md)
+
 一个在编译期执行数据加载文件(如\*.data.js/ts/mjs/mts)并转换为 JavaScript 对象字符串模块的通用插件
 
 ## 安装
