@@ -173,9 +173,6 @@ Output the latest commit information of the current Git repository to the browse
 ```ts
 // commit.data.ts
 import { simpleGit } from 'simple-git'
-
-// main.ts
-import commitLog from './utils/commit.data'
 const latestLog = (await simpleGit().log({ maxCount: 1 })).latest!
 const commitLog
   = `GIT commit\n${
@@ -186,5 +183,8 @@ const commitLog
       })
       .join('\n')}`
 export default commitLog
+
+// main.ts
+import commitLog from './utils/commit.data'
 console.log(commitLog)
 ```
