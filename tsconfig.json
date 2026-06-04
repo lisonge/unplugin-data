@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
-    "lib": ["ESNext", "DOM"],
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "target": "es2022",
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "allowJs": true,
     "strict": true,
-    "strictNullChecks": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "types": ["node"]
   },
-  "include": ["src"],
-  "exclude": ["dist", "eslint.config.js"]
+  "include": ["src", "*.ts"]
 }

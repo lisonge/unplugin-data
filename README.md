@@ -2,28 +2,43 @@
 
 [English](./README.md) | [中文文档](./README.zh.md)
 
-A universal plugin that performs data file loading (e.g., *.data.js/ts/mjs/mts) and transforms it into a JavaScript object string module at compile time.
+Load ESM data files at build time and turn their exports into JavaScript modules.
+
+`unplugin-data` runs matched `*.data.js`, `*.data.mjs`, `*.data.ts`, and
+`*.data.mts` files in the current Node.js process with [`jiti`](https://github.com/unjs/jiti),
+then serializes the module exports with [`serialize-javascript`](https://github.com/yahoo/serialize-javascript).
+
+## Features
+
+- Works with Vite, Rollup, Rolldown, Webpack, Rspack, esbuild, and Farm through `unplugin`.
+- Supports default exports and named exports.
+- Supports async data modules and top-level `await`.
+- Excludes `node_modules` by default.
+- Emits plain JavaScript module code during compilation.
 
 ## Install
 
 ```sh
-pnpm add unplugin-data
-# npm i unplugin-data
+pnpm add -D unplugin-data
+# npm i -D unplugin-data
+# yarn add -D unplugin-data
 ```
+
+This package exposes ESM entry points. Use ESM config files such as
+`vite.config.ts`, `webpack.config.mjs`, or `rollup.config.mjs`.
+
+## Usage
 
 <details>
 <summary>Vite</summary><br>
 
 ```ts
 // vite.config.ts
+import { defineConfig } from 'vite'
 import data from 'unplugin-data/vite'
 
 export default defineConfig({
-  plugins: [
-    data({
-      /* options */
-    }), // or data()
-  ],
+  plugins: [data()],
 })
 ```
 
@@ -33,15 +48,25 @@ export default defineConfig({
 <summary>Rollup</summary><br>
 
 ```ts
-// rollup.config.js
+// rollup.config.mjs
 import data from 'unplugin-data/rollup'
 
 export default {
-  plugins: [
-    data({
-      /* options */
-    }), // or data()
-  ],
+  plugins: [data()],
+}
+```
+
+<br></details>
+
+<details>
+<summary>Rolldown</summary><br>
+
+```ts
+// rolldown.config.mjs
+import data from 'unplugin-data/rolldown'
+
+export default {
+  plugins: [data()],
 }
 ```
 
@@ -51,53 +76,25 @@ export default {
 <summary>Webpack</summary><br>
 
 ```ts
-// webpack.config.js
-module.exports = {
-  /* ... */
-  plugins: [
-    require('unplugin-data/webpack')({
-      /* options */
-    }),
-  ],
+// webpack.config.mjs
+import data from 'unplugin-data/webpack'
+
+export default {
+  plugins: [data()],
 }
 ```
 
 <br></details>
 
 <details>
-<summary>Nuxt</summary><br>
+<summary>Rspack</summary><br>
 
 ```ts
-// nuxt.config.js
-export default defineNuxtConfig({
-  modules: [
-    [
-      'unplugin-data/nuxt',
-      {
-        /* options */
-      },
-    ],
-  ],
-})
-```
+// rspack.config.mjs
+import data from 'unplugin-data/rspack'
 
-> This module works for both Nuxt 2 and [Nuxt Vite](https://github.com/nuxt/vite)
-
-<br></details>
-
-<details>
-<summary>Vue CLI</summary><br>
-
-```ts
-// vue.config.js
-module.exports = {
-  configureWebpack: {
-    plugins: [
-      require('unplugin-data/webpack')({
-        /* options */
-      }),
-    ],
-  },
+export default {
+  plugins: [data()],
 }
 ```
 
@@ -107,16 +104,29 @@ module.exports = {
 <summary>esbuild</summary><br>
 
 ```ts
-// esbuild.config.js
+// esbuild.config.mjs
 import { build } from 'esbuild'
 import data from 'unplugin-data/esbuild'
 
-build({
-  plugins: [
-    data({
-      /* options */
-    }), // or data()
-  ],
+await build({
+  entryPoints: ['src/index.ts'],
+  bundle: true,
+  plugins: [data()],
+})
+```
+
+<br></details>
+
+<details>
+<summary>Farm</summary><br>
+
+```ts
+// farm.config.ts
+import { defineConfig } from '@farmfe/core'
+import data from 'unplugin-data/farm'
+
+export default defineConfig({
+  plugins: [data()],
 })
 ```
 
@@ -127,64 +137,62 @@ build({
 ```ts
 export interface Options {
   /**
-   * Include data files to transform. Only support esm files.
+   * Include data files to transform. Only ESM data files are supported.
    *
-   * @default
-   * /^(?!.*[\\\/]node_modules[\\\/]).*\.data\.(js|mjs|ts|mts)$/
-   * // the data js/ts file of the project but not in node_modules
+   * @default /^(?!.*[\\/]node_modules[\\/]).*\.data\.(js|mjs|ts|mts)$/
    */
-  include?: RegExp | ((id: string) => boolean)
-
-  /**
-   * transform the data object to JavaScript object strings
-   */
-  stringify?: (value: any) => string
+  include?: RegExp
 }
 ```
 
-## Example
-
-[ts.data.ts](./playground/src/data/ts.data.ts)
+Example:
 
 ```ts
-const ts0 = new Set([1, 2, 3, undefined])
-export default ts0
-export const ts1 = new Date()
-export const ts2 = await fetch(
-  'https://registry.npmmirror.com/typescript/latest',
-)
-  .then(r => r.json())
-  .then(r => r.version)
+import data from 'unplugin-data/vite'
+
+export default defineConfig({
+  plugins: [
+    data({
+      include: /src[\\/]data[\\/].*\.config\.(js|mjs|ts|mts)$/,
+    }),
+  ],
+})
 ```
 
-plugin will run it in current nodejs runtims and transform result to the following code
+## Data Files
+
+Create a data module:
+
+```ts
+// src/build-info.data.ts
+export default {
+  name: 'demo',
+  generatedAt: new Date('2026-01-01T00:00:00.000Z'),
+}
+
+export const flags = new Set(['stable', 'docs'])
+```
+
+Import it from your application code:
+
+```ts
+// src/main.ts
+import buildInfo, { flags } from './build-info.data'
+
+console.log(buildInfo, flags)
+```
+
+During compilation, the data file is executed in Node.js and transformed into a
+JavaScript module similar to:
 
 ```js
-const ts0 = /* @__PURE__ */ new Set([1, 2, 3, void 0])
-export default ts0
-export const ts1 = /* @__PURE__ */ new Date(1730102201114)
-export const ts2 = '5.6.3'
+export default {"name":"demo","generatedAt":new Date("2026-01-01T00:00:00.000Z")};
+export const flags = new Set(["stable","docs"])
 ```
 
-## Example2
+## Notes
 
-Output the latest commit information of the current Git repository to the browser console. [commit.data.ts](https://github.com/gkd-kit/inspect/blob/ce5c9871aa2a847780a13181d776f248ae4cf6e2/src/utils/commit.data.ts#L1)
-
-```ts
-// commit.data.ts
-import { simpleGit } from 'simple-git'
-const latestLog = (await simpleGit().log({ maxCount: 1 })).latest!
-const commitLog
-  = `GIT commit\n${
-    Object.entries(latestLog)
-      .filter(([_, value]: [string, string]) => String(value || ``).trim())
-      .map(([key, value]) => {
-        return `${key}: ${value}`
-      })
-      .join('\n')}`
-export default commitLog
-
-// main.ts
-import commitLog from './utils/commit.data'
-console.log(commitLog)
-```
+- Data files run at build time, so avoid browser-only APIs unless you provide your own polyfills.
+- Export values that `serialize-javascript` can serialize.
+- Module caching is disabled for data imports, so rebuilds can re-run data modules.
+- If TypeScript cannot resolve `*.data.*` imports, add declaration files that match your project exports.
